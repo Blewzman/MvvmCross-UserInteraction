@@ -1,6 +1,5 @@
 using System;
 using Android.App;
-using Android.Content;
 using Cirrious.CrossCore;
 using Android.Widget;
 using Cirrious.CrossCore.Droid.Platform;
@@ -9,140 +8,192 @@ using AlertDialog = Android.Support.V7.App.AlertDialog;
 
 namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 {
-	public class UserInteraction : IUserInteraction
-	{
-		protected Activity CurrentActivity {
-			get { return Mvx.Resolve<IMvxAndroidCurrentTopActivity>().Activity; }
-		}
+    public class UserInteraction : IUserInteraction
+    {
+        protected Activity CurrentActivity
+        {
+            get { return Mvx.Resolve<IMvxAndroidCurrentTopActivity>().Activity; }
+        }
 
-		public void Confirm(string message, Action okClicked, string title = null, string okButton = "OK", string cancelButton = "Cancel")
-		{
-			Confirm(message, confirmed => {
-				if (confirmed)
-					okClicked();
-			},
-			title, okButton, cancelButton);
-		}
+        public void Confirm(string message, Action okClicked, string title = null, string okButton = "OK", string cancelButton = "Cancel")
+        {
+            this.Confirm(
+                message, 
+                confirmed =>
+                {
+                    if (confirmed)
+                        okClicked();
+                },
+                title, 
+                okButton, 
+                cancelButton);
+        }
 
-		public void Confirm(string message, Action<bool> answer, string title = null, string okButton = "OK", string cancelButton = "Cancel")
-		{
-			//Mvx.Resolve<IMvxMainThreadDispatcher>().RequestMainThreadAction();
-			Application.SynchronizationContext.Post(ignored => {
-				if (CurrentActivity == null) return;
-				new AlertDialog.Builder(CurrentActivity)
-					.SetMessage(message)
-						.SetTitle(title)
-						.SetPositiveButton(okButton, delegate {
-							if (answer != null)
-								answer(true);
-						})
-						.SetNegativeButton(cancelButton, delegate {	
-							if (answer != null)
-								answer(false);
-						})
-						.Show();
-			}, null);
-		}
+        public void Confirm(string message, Action<bool> answer, string title = null, string okButton = "OK", string cancelButton = "Cancel")
+        {
+            var task = this.ConfirmAsync(
+                message, 
+                title, 
+                okButton, 
+                cancelButton);
 
-		public Task<bool> ConfirmAsync(string message, string title = "", string okButton = "OK", string cancelButton = "Cancel")
-		{
-			var tcs = new TaskCompletionSource<bool>();
-			Confirm(message, tcs.SetResult, title, okButton, cancelButton);
-			return tcs.Task;
-		}
+            if (answer != null)
+                task.ContinueWith((closureTask, closureAction) => ((Action<bool>)closureAction)(closureTask.Result), answer, TaskContinuationOptions.OnlyOnRanToCompletion);
+        }
 
-	    public void ConfirmThreeButtons(string message, Action<ConfirmThreeButtonsResponse> answer, string title = null, string positive = "Yes", string negative = "No",
-	        string neutral = "Maybe")
-	    {
-	        Application.SynchronizationContext.Post(ignored =>
-            {
-                if (CurrentActivity == null) return;
-                new AlertDialog.Builder(CurrentActivity)
-                    .SetMessage(message)
-                        .SetTitle(title)
-                        .SetPositiveButton(positive, delegate {
-                            if (answer != null)
-                                answer(ConfirmThreeButtonsResponse.Positive);
-                        })
-                        .SetNegativeButton(negative, delegate {
-                            if (answer != null)
-                                answer(ConfirmThreeButtonsResponse.Negative);
-                        })
-                        .SetNeutralButton(neutral, delegate {
-                            if (answer != null)
-                                answer(ConfirmThreeButtonsResponse.Neutral);
-                        })
-                        .Show();
-            }, null);
-	    }
+        public Task<bool> ConfirmAsync(string message, string title = "", string okButton = "OK", string cancelButton = "Cancel")
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            Application.SynchronizationContext.Post(
+                ignored => 
+                {
+                    if (CurrentActivity == null)
+                        tcs.TrySetCanceled();
+                    else
+                    {
+                        new AlertDialog.Builder(CurrentActivity)
+                            .SetMessage(message)
+                            .SetTitle(title)
+                            .SetPositiveButton(okButton, (s, e) => tcs.TrySetResult(true))
+                            .SetNegativeButton(cancelButton, (s, e) => tcs.TrySetResult(false))
+                            .Show();
+                    }
+                }, 
+                null);
+
+            return tcs.Task;
+        }
+
+        public void ConfirmThreeButtons(string message, Action<ConfirmThreeButtonsResponse> answer, string title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe")
+        {
+            var task = this.ConfirmThreeButtonsAsync(
+                message,
+                title,
+                positive,
+                negative,
+                neutral);
+
+            if (answer != null)
+                task.ContinueWith((closureTask, closureAction) => ((Action<ConfirmThreeButtonsResponse>)closureAction)(closureTask.Result), answer, TaskContinuationOptions.OnlyOnRanToCompletion);
+        }
 
         public Task<ConfirmThreeButtonsResponse> ConfirmThreeButtonsAsync(string message, string title = null, string positive = "Yes", string negative = "No",
             string neutral = "Maybe")
-	    {
-	        var tcs = new TaskCompletionSource<ConfirmThreeButtonsResponse>();
-	        ConfirmThreeButtons(message, tcs.SetResult, title, positive, negative, neutral);
-	        return tcs.Task;
-	    }
+        {
+            var tcs = new TaskCompletionSource<ConfirmThreeButtonsResponse>();
 
-		public void Alert(string message, Action done = null, string title = "", string okButton = "OK")
-		{
-			Application.SynchronizationContext.Post(ignored => {
-				if (CurrentActivity == null) return;
-				new AlertDialog.Builder(CurrentActivity)
-					.SetMessage(message)
-						.SetTitle(title)
-						.SetPositiveButton(okButton, delegate {
-							if (done != null)
-								done();
-						})
-						.Show();
-			}, null);
-		}
+            Application.SynchronizationContext.Post(ignored =>
+            {
+                if (CurrentActivity == null)
+                    tcs.TrySetCanceled();
+                else
+                {
+                    new AlertDialog.Builder(CurrentActivity)
+                        .SetMessage(message)
+                        .SetTitle(title)
+                        .SetPositiveButton(positive, (s, e) => tcs.TrySetResult(ConfirmThreeButtonsResponse.Positive))
+                        .SetNegativeButton(negative, (s, e) => tcs.TrySetResult(ConfirmThreeButtonsResponse.Negative))
+                        .SetNeutralButton(neutral, (s, e) => tcs.TrySetResult(ConfirmThreeButtonsResponse.Neutral))
+                        .Show();
+                }
+            }, null);
 
-		public Task AlertAsync(string message, string title = "", string okButton = "OK")
-		{
-			var tcs = new TaskCompletionSource<object>();
-			Alert(message, () => tcs.SetResult(null), title, okButton);
-			return tcs.Task;
-		}
+            return tcs.Task;
+        }
 
-		public void Input(string message, Action<string> okClicked, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
-		{
-			Input(message, (ok, text) => {
-				if (ok)
-					okClicked(text);
-			},
-				placeholder, title, okButton, cancelButton, initialText);
-		}
+        public void Alert(string message, Action done = null, string title = "", string okButton = "OK")
+        {
+            var task = this.AlertAsync(
+                message,
+                title,
+                okButton);
 
-		public void Input(string message, Action<bool, string> answer, string hint = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
-		{
-			Application.SynchronizationContext.Post(ignored => {
-				if (CurrentActivity == null) return;
-				var input = new EditText(CurrentActivity) { Hint = hint, Text = initialText };
+            if (done != null)
+                task.ContinueWith((closureTask, closureAction) => ((Action)closureAction)(), done, TaskContinuationOptions.OnlyOnRanToCompletion);
+        }
 
-				new AlertDialog.Builder(CurrentActivity)
-					.SetMessage(message)
-						.SetTitle(title)
-						.SetView(input)
-						.SetPositiveButton(okButton, delegate {
-							if (answer != null)
-								answer(true, input.Text);
-						})
-						.SetNegativeButton(cancelButton, delegate {	
-							if (answer != null)
-								answer(false, input.Text);
-						})
-						.Show();
-			}, null);
-		}
+        public Task AlertAsync(string message, string title = "", string okButton = "OK")
+        {
+            var tcs = new TaskCompletionSource<object>();
 
-		public Task<InputResponse> InputAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
-		{
-			var tcs = new TaskCompletionSource<InputResponse>();
-			Input(message, (ok, text) => tcs.SetResult(new InputResponse {Ok = ok, Text = text}),	placeholder, title, okButton, cancelButton, initialText);
-			return tcs.Task;
-		}
-	}
+            Application.SynchronizationContext.Post(ignored => 
+            {
+                if (CurrentActivity == null)
+                    tcs.TrySetCanceled();
+                else
+                {
+                    new AlertDialog.Builder(CurrentActivity)
+                        .SetMessage(message)
+                        .SetTitle(title)
+                        .SetPositiveButton(okButton, (s, e) => tcs.TrySetResult(null))
+                        .Show();
+                }
+            }, null);
+
+            return tcs.Task;
+        }
+
+        public void Input(string message, Action<string> okClicked, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
+        {
+            this.Input(
+                message, 
+                (ok, text) => 
+                {
+                    if (ok)
+                        okClicked(text);
+                },
+                placeholder, 
+                title, 
+                okButton, 
+                cancelButton, 
+                initialText);
+        }
+
+        public void Input(string message, Action<bool, string> answer, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
+        {
+            var task = this.InputAsync(message, placeholder, title, okButton, cancelButton, initialText);
+
+            if (answer != null)
+            {
+                task.ContinueWith(
+                    (closureTask, closureAction) =>
+                    {
+                        var response = closureTask.Result;
+
+                        ((Action<bool, string>)closureAction)(response.Ok, response.Text);
+                    },
+                    answer,
+                    TaskContinuationOptions.OnlyOnRanToCompletion);
+            }
+        }
+
+        public Task<InputResponse> InputAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
+        {
+            var tcs = new TaskCompletionSource<InputResponse>();
+
+            Application.SynchronizationContext.Post(
+                ignored =>
+                {
+                    if (CurrentActivity == null)
+                        tcs.TrySetCanceled();
+                    else
+                    {
+                        var input = new EditText(CurrentActivity) { Hint = placeholder, Text = initialText };
+
+                        new AlertDialog.Builder(CurrentActivity)
+                            .SetMessage(message)
+                            .SetTitle(title)
+                            .SetView(input)
+                            .SetPositiveButton(okButton, (s, e) => tcs.TrySetResult(new InputResponse { Ok = true, Text = input.Text }))
+                            .SetNegativeButton(cancelButton, (s, e) => tcs.TrySetResult(new InputResponse { Ok = false, Text = input.Text }))
+                            .Show();
+                    }
+                },
+                null);
+
+            return tcs.Task;
+        }
+    }
 }
 
