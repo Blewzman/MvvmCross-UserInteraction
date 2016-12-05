@@ -10,27 +10,6 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.WindowsCommon
 {
     public class UserInteraction : IUserInteraction
     {
-        public void Confirm(string message, Action okClicked, string title = null, string okButton = "OK", string cancelButton = "Cancel")
-        {
-            Task<bool> result = ConfirmAsync(message, title, okButton, cancelButton);
-
-
-            result.ContinueWith((button) =>
-            {
-                if (button.Result)
-                {
-                    //ok clicked
-                    okClicked();
-                }
-            });
-        }
-
-        public void Confirm(string message, Action<bool> answer, string title = null, string okButton = "OK", string cancelButton = "Cancel")
-        {
-            var result = ConfirmAsync(message, title, okButton, cancelButton);
-            result.ContinueWith((button) => answer(button.Result));
-        }
-
         public Task<bool> ConfirmAsync(string message, string title = "", string okButton = "OK", string cancelButton = "Cancel")
         {
             var complete = new TaskCompletionSource<bool>();
@@ -43,12 +22,6 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.WindowsCommon
             return complete.Task;
         }
 
-        public void Alert(string message, Action done = null, string title = "", string okButton = "OK")
-        {
-
-            AlertAsync(message, title, okButton).ContinueWith((button) => { if (done != null) done(); });
-        }
-
         public Task AlertAsync(string message, string title = "", string okButton = "OK")
         {
             var dialog = new MessageDialog(message, title);
@@ -56,28 +29,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.WindowsCommon
             return dialog.ShowAsync().AsTask();
         }
 
-
-        public void Input(string message, Action<string> okClicked, string placeholder = null, string title = null, string okButton = "OK",
-           string cancelButton = "Cancel", string initialText = null)
-        {
-            var result = InputAsync(message, placeholder, title, okButton, cancelButton);
-            result.ContinueWith((value) =>
-            {
-                if (value.Result.Ok)
-                {
-                    okClicked(value.Result.Text);
-                }
-            });
-        }
-        
-        public void Input(string message, Action<bool, string> answer, string placeholder = null, string title = null, string okButton = "OK",
-            string cancelButton = "Cancel", string initialText = null)
-        {
-            var result = InputAsync(message, placeholder, title, okButton, cancelButton);
-            result.ContinueWith(value => answer(value.Result.Ok, value.Result.Text));
-        }
-
-       public Task<InputResponse> InputAsync(string message, string placeholder = null, string title = null, string okButton = "OK",
+        public Task<InputResponse> InputAsync(string message, string placeholder = null, string title = null, string okButton = "OK",
             string cancelButton = "Cancel", string initialText = null)
         {
            
@@ -100,14 +52,6 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.WindowsCommon
             //});
             //box.Show();
             return response.Task;
-        }
-
-
-        public void ConfirmThreeButtons(string message, Action<ConfirmThreeButtonsResponse> answer, string title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe")
-        {
-
-            var result = ConfirmThreeButtonsAsync(message, title, positive, negative, neutral);
-            result.ContinueWith((value) => answer(value.Result));
         }
 
         public Task<ConfirmThreeButtonsResponse> ConfirmThreeButtonsAsync(string message, string title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe")
