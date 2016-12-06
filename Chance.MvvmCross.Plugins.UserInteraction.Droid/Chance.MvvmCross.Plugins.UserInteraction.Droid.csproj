@@ -53,7 +53,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IShowDialogService.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="ShowDialogService.cs" />
     <Compile Include="UserInteraction.cs" />
     <Compile Include="Plugin.cs" />
   </ItemGroup>

@@ -4,12 +4,13 @@ using Cirrious.CrossCore;
 
 namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 {
-	public class Plugin : IMvxPlugin
-	{
-		public void Load() 
-		{
-			Mvx.RegisterType<IUserInteraction, UserInteraction>();
-		}
-	}
+    public class Plugin : IMvxPlugin
+    {
+        public void Load() 
+        {
+            Mvx.RegisterType<IUserInteraction, UserInteraction>();
+            Mvx.RegisterType<IShowDialogService, ShowDialogService>();
+        }
+    }
 }
 
