@@ -79,5 +79,15 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Touch
 
             return tcs.Task;
         }
+
+        public Task<int?> ChooseSingleAsync(string message, string[] options, int? chosenItem = null, string title = null, string okButton = "OK", string cancelButton = "Cancel")
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int[]> ChooseMultipleAsync(string message, string[] options, int[] selectedOptions, string title = null, string okButton = "OK", string cancelButton = "Cancel")
+        {
+            throw new NotImplementedException();
+        }
     }
 }
