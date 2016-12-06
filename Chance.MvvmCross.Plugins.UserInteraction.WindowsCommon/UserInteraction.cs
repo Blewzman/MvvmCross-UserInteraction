@@ -76,5 +76,10 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.WindowsCommon
         {
             throw new NotImplementedException();
         }
+
+        public Task<InputResponse> InputNumberAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

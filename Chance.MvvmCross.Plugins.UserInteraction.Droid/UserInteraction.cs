@@ -48,6 +48,22 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
             };
         }
 
+        public async Task<InputResponse> InputNumberAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
+        {
+            var input = new EditText(this._showDialogService.CurrentActivity)
+            {
+                Hint = placeholder,
+                Text = initialText,
+                InputType = Android.Text.InputTypes.ClassNumber | Android.Text.InputTypes.NumberFlagDecimal
+            };
+
+            return new InputResponse
+            {
+                Ok = await this._showDialogService.ShowAsync(message, title, input, okButton, cancelButton) == ConfirmThreeButtonsResponse.Positive,
+                Text = input.Text
+            };
+        }
+
         public async Task<int?> ChooseSingleAsync(string message, string[] options, int? chosenItem = null, string title = null, string okButton = "OK", string cancelButton = "Cancel")
         {
             var radioButtons = options
