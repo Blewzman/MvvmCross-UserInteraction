@@ -33,7 +33,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.WindowsStore
             await box.ShowAsync();
         }
 
-        public async Task<InputResponse> InputAsync(string message, string placeholder = null, string title = null, string okButton = "OK",
+        public async Task<InputResponse> InputTextAsync(string message, string placeholder = null, string title = null, string okButton = "OK",
             string cancelButton = "Cancel", string initialText = null)
         {
             var box = new InputDialog { InputText = initialText ?? string.Empty };

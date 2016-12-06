@@ -61,7 +61,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Touch
             return tcs.Task;
         }
 
-        public Task<InputResponse> InputAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
+        public Task<InputResponse> InputTextAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
         {
             var tcs = new TaskCompletionSource<InputResponse>();
 

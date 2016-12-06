@@ -33,7 +33,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
             return this._showDialogService.ShowAsync(message, title, null, okButton);
         }
 
-        public async Task<InputResponse> InputAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
+        public async Task<InputResponse> InputTextAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
         {
             var input = new EditText(this._showDialogService.CurrentActivity)
             {

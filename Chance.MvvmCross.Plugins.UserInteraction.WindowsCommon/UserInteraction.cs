@@ -29,7 +29,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.WindowsCommon
             return dialog.ShowAsync().AsTask();
         }
 
-        public Task<InputResponse> InputAsync(string message, string placeholder = null, string title = null, string okButton = "OK",
+        public Task<InputResponse> InputTextAsync(string message, string placeholder = null, string title = null, string okButton = "OK",
             string cancelButton = "Cancel", string initialText = null)
         {
            

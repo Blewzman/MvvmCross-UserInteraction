@@ -63,7 +63,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction
 
         public static void Input(this IUserInteraction userInteraction, string message, Action<bool, string> answer, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
         {
-            var task = userInteraction.InputAsync(message, placeholder, title, okButton, cancelButton, initialText);
+            var task = userInteraction.InputTextAsync(message, placeholder, title, okButton, cancelButton, initialText);
 
             if (answer != null)
             {
