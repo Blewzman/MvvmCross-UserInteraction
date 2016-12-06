@@ -1,6 +1,5 @@
-using System;
-using Cirrious.CrossCore.Plugins;
-using Cirrious.CrossCore;
+using MvvmCross.Platform;
+using MvvmCross.Platform.Plugins;
 
 namespace Chance.MvvmCross.Plugins.UserInteraction.WindowsCommon
 {
