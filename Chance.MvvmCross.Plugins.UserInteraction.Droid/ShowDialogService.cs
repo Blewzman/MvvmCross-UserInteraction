@@ -19,7 +19,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
                     tcs.TrySetCanceled();
                 else
                 {
-                    var builder = new AlertDialog.Builder(CurrentActivity)
+                    var builder = this.CreateBuilder()
                         .SetMessage(message)
                         .SetTitle(title);
 
@@ -41,6 +41,11 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
             }, null);
 
             return tcs.Task;
+        }
+
+        protected virtual AlertDialog.Builder CreateBuilder()
+        {
+            return new AlertDialog.Builder(this.CurrentActivity);
         }
 
         public Activity CurrentActivity => Mvx.Resolve<IMvxAndroidCurrentTopActivity>().Activity;
