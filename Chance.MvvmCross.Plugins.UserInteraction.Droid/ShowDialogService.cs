@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Views;
@@ -9,7 +10,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 {
     public class ShowDialogService : IShowDialogService
     {
-        public Task<ConfirmThreeButtonsResponse> ShowAsync(string message, string title = null, View view = null, string positive = null, string negative = null, string neutral = null)
+        public Task<ConfirmThreeButtonsResponse> ShowAsync(string message, string title = null, View view = null, string positive = null, string negative = null, string neutral = null, CancellationToken ct = default(CancellationToken))
         {
             var tcs = new TaskCompletionSource<ConfirmThreeButtonsResponse>();
 
@@ -35,8 +36,22 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
                     if (neutral != null)
                         builder = builder.SetNeutralButton(neutral, (s, e) => tcs.TrySetResult(ConfirmThreeButtonsResponse.Neutral));
 
-                    builder
-                        .Show();
+                    var dialog = builder
+                        .Create();
+
+                    if (ct.CanBeCanceled)
+                    {
+                        var subscription = ct.Register(() =>
+                        {
+                            Application.SynchronizationContext.Post(ignored2 => dialog.SafeDismiss(), null);
+                            tcs.TrySetResult(ConfirmThreeButtonsResponse.Negative);
+                        });
+
+                        // ReSharper disable once MethodSupportsCancellation
+                        tcs.Task.ContinueWith(_ => subscription.Dispose());
+                    }
+
+                    dialog.Show();
                 }
             }, null);
 

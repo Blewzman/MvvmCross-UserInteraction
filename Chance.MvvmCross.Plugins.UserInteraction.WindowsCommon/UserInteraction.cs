@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Windows.UI.Popups;
@@ -10,7 +11,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.WindowsCommon
 {
     public class UserInteraction : IUserInteraction
     {
-        public Task<bool> ConfirmAsync(string message, string title = "", string okButton = "OK", string cancelButton = "Cancel")
+        public Task<bool> ConfirmAsync(string message, string title = "", string okButton = "OK", string cancelButton = "Cancel", CancellationToken ct = default(CancellationToken))
         {
             var complete = new TaskCompletionSource<bool>();
             var dialog = new MessageDialog(message, title);
@@ -22,15 +23,14 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.WindowsCommon
             return complete.Task;
         }
 
-        public Task AlertAsync(string message, string title = "", string okButton = "OK")
+        public Task AlertAsync(string message, string title = "", string okButton = "OK", CancellationToken ct = default(CancellationToken))
         {
             var dialog = new MessageDialog(message, title);
             dialog.Commands.Add(new UICommand(okButton));
             return dialog.ShowAsync().AsTask();
         }
 
-        public Task<InputResponse> InputTextAsync(string message, string placeholder = null, string title = null, string okButton = "OK",
-            string cancelButton = "Cancel", string initialText = null)
+        public Task<InputResponse> InputTextAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null, CancellationToken ct = default(CancellationToken))
         {
            
             //var textBox = new PhoneTextBox { Hint = placeholder };
@@ -54,7 +54,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.WindowsCommon
             return response.Task;
         }
 
-        public Task<ConfirmThreeButtonsResponse> ConfirmThreeButtonsAsync(string message, string title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe")
+        public Task<ConfirmThreeButtonsResponse> ConfirmThreeButtonsAsync(string message, string title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe", CancellationToken ct = default(CancellationToken))
         {
             var complete = new TaskCompletionSource<ConfirmThreeButtonsResponse>();
             var dialog = new MessageDialog(message, title ?? "");
@@ -67,17 +67,17 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.WindowsCommon
             return complete.Task;
         }
 
-        public Task<int?> ChooseSingleAsync(string message, string[] options, int? chosenItem = null, string title = null, string okButton = "OK", string cancelButton = "Cancel")
+        public Task<int?> ChooseSingleAsync(string message, string[] options, int? chosenItem = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", CancellationToken ct = default(CancellationToken))
         {
             throw new NotImplementedException();
         }
 
-        public Task<int[]> ChooseMultipleAsync(string message, string[] options, int[] selectedOptions, string title = null, string okButton = "OK", string cancelButton = "Cancel")
+        public Task<int[]> ChooseMultipleAsync(string message, string[] options, int[] selectedOptions, string title = null, string okButton = "OK", string cancelButton = "Cancel", CancellationToken ct = default(CancellationToken))
         {
             throw new NotImplementedException();
         }
 
-        public Task<InputResponse> InputNumberAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
+        public Task<InputResponse> InputNumberAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null, CancellationToken ct = default(CancellationToken))
         {
             throw new NotImplementedException();
         }

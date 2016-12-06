@@ -1,8 +1,7 @@
-using System;
 using System.Linq;
+using System.Threading;
 using Android.Widget;
 using System.Threading.Tasks;
-using Android.App;
 using Android.Graphics;
 using Android.Util;
 using Android.Views;
@@ -18,22 +17,22 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
             this._showDialogService = showDialogService;
         }
 
-        public async Task<bool> ConfirmAsync(string message, string title = "", string okButton = "OK", string cancelButton = "Cancel")
+        public async Task<bool> ConfirmAsync(string message, string title = "", string okButton = "OK", string cancelButton = "Cancel", CancellationToken ct = default(CancellationToken))
         {
-            return await this._showDialogService.ShowAsync(message, title, null, okButton, cancelButton) == ConfirmThreeButtonsResponse.Positive;
+            return await this._showDialogService.ShowAsync(message, title, null, okButton, cancelButton, null, ct) == ConfirmThreeButtonsResponse.Positive;
         }
 
-        public Task<ConfirmThreeButtonsResponse> ConfirmThreeButtonsAsync(string message, string title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe")
+        public Task<ConfirmThreeButtonsResponse> ConfirmThreeButtonsAsync(string message, string title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe", CancellationToken ct = default(CancellationToken))
         {
-            return this._showDialogService.ShowAsync(message, title, null, positive, negative, neutral);
+            return this._showDialogService.ShowAsync(message, title, null, positive, negative, neutral, ct);
         }
 
-        public Task AlertAsync(string message, string title = "", string okButton = "OK")
+        public Task AlertAsync(string message, string title = "", string okButton = "OK", CancellationToken ct = default(CancellationToken))
         {
-            return this._showDialogService.ShowAsync(message, title, null, okButton);
+            return this._showDialogService.ShowAsync(message, title, null, okButton, null, null, ct);
         }
 
-        public async Task<InputResponse> InputTextAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
+        public async Task<InputResponse> InputTextAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null, CancellationToken ct = default(CancellationToken))
         {
             var input = new EditText(this._showDialogService.CurrentActivity)
             {
@@ -43,12 +42,12 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
             return new InputResponse
             {
-                Ok = await this._showDialogService.ShowAsync(message, title, input, okButton, cancelButton) == ConfirmThreeButtonsResponse.Positive,
+                Ok = await this._showDialogService.ShowAsync(message, title, input, okButton, cancelButton, null, ct) == ConfirmThreeButtonsResponse.Positive,
                 Text = input.Text
             };
         }
 
-        public async Task<InputResponse> InputNumberAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
+        public async Task<InputResponse> InputNumberAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null, CancellationToken ct = default(CancellationToken))
         {
             var input = new EditText(this._showDialogService.CurrentActivity)
             {
@@ -59,12 +58,12 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
             return new InputResponse
             {
-                Ok = await this._showDialogService.ShowAsync(message, title, input, okButton, cancelButton) == ConfirmThreeButtonsResponse.Positive,
+                Ok = await this._showDialogService.ShowAsync(message, title, input, okButton, cancelButton,  null, ct) == ConfirmThreeButtonsResponse.Positive,
                 Text = input.Text
             };
         }
 
-        public async Task<int?> ChooseSingleAsync(string message, string[] options, int? chosenItem = null, string title = null, string okButton = "OK", string cancelButton = "Cancel")
+        public async Task<int?> ChooseSingleAsync(string message, string[] options, int? chosenItem = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", CancellationToken ct = default(CancellationToken))
         {
             var radioButtons = options
                 .Select((option, i) =>
@@ -105,12 +104,12 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
             scrollView.AddView(radioGroup);
 
-            return await this._showDialogService.ShowAsync(message, title, scrollView, okButton, cancelButton) == ConfirmThreeButtonsResponse.Positive
+            return await this._showDialogService.ShowAsync(message, title, scrollView, okButton, cancelButton, null, ct) == ConfirmThreeButtonsResponse.Positive
                 ? (radioGroup.CheckedRadioButtonId > 0 ? radioGroup.CheckedRadioButtonId - 1 : (int?) null)
                 : null;
         }
 
-        public async Task<int[]> ChooseMultipleAsync(string message, string[] options, int[] selectedOptions, string title = null, string okButton = "OK", string cancelButton = "Cancel")
+        public async Task<int[]> ChooseMultipleAsync(string message, string[] options, int[] selectedOptions, string title = null, string okButton = "OK", string cancelButton = "Cancel", CancellationToken ct = default(CancellationToken))
         {
             CheckBox[] checkBoxes = null;
 
@@ -176,7 +175,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
             scrollView.AddView(linearLayout);
 
-            return await this._showDialogService.ShowAsync(message, title, scrollView, okButton, cancelButton) == ConfirmThreeButtonsResponse.Positive
+            return await this._showDialogService.ShowAsync(message, title, scrollView, okButton, cancelButton, null, ct) == ConfirmThreeButtonsResponse.Positive
                 ? options.Select((x, i) => checkBoxes[i].Checked ? i : -1).Where(x => x != -1).ToArray() 
                 : new int[0];
         }

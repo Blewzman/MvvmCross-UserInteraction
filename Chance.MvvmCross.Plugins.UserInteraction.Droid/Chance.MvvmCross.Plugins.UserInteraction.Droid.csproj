@@ -55,6 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlertDialogExtensions.cs" />
     <Compile Include="IShowDialogService.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="ShowDialogService.cs" />

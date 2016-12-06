@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using UIKit;
 using System.Threading.Tasks;
 
@@ -6,7 +7,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Touch
 {
     public class UserInteraction : IUserInteraction
     {
-        public Task<bool> ConfirmAsync(string message, string title = "", string okButton = "OK", string cancelButton = "Cancel")
+        public Task<bool> ConfirmAsync(string message, string title = "", string okButton = "OK", string cancelButton = "Cancel", CancellationToken ct = default(CancellationToken))
         {
             var tcs = new TaskCompletionSource<bool>();
 
@@ -26,7 +27,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Touch
             return tcs.Task;
         }
 
-        public Task<ConfirmThreeButtonsResponse> ConfirmThreeButtonsAsync(string message, string title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe")
+        public Task<ConfirmThreeButtonsResponse> ConfirmThreeButtonsAsync(string message, string title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe", CancellationToken ct = default(CancellationToken))
         {
             var tcs = new TaskCompletionSource<ConfirmThreeButtonsResponse>();
             var confirm = new UIAlertView(title ?? string.Empty, message, null, negative, positive, neutral);
@@ -47,7 +48,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Touch
             return tcs.Task;
         }
 
-        public Task AlertAsync(string message, string title = "", string okButton = "OK")
+        public Task AlertAsync(string message, string title = "", string okButton = "OK", CancellationToken ct = default(CancellationToken))
         {
             var tcs = new TaskCompletionSource<object>();
 
@@ -61,7 +62,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Touch
             return tcs.Task;
         }
 
-        public Task<InputResponse> InputTextAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
+        public Task<InputResponse> InputTextAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null, CancellationToken ct = default(CancellationToken))
         {
             var tcs = new TaskCompletionSource<InputResponse>();
 
@@ -80,17 +81,17 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Touch
             return tcs.Task;
         }
 
-        public Task<int?> ChooseSingleAsync(string message, string[] options, int? chosenItem = null, string title = null, string okButton = "OK", string cancelButton = "Cancel")
+        public Task<int?> ChooseSingleAsync(string message, string[] options, int? chosenItem = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", CancellationToken ct = default(CancellationToken))
         {
             throw new NotImplementedException();
         }
 
-        public Task<int[]> ChooseMultipleAsync(string message, string[] options, int[] selectedOptions, string title = null, string okButton = "OK", string cancelButton = "Cancel")
+        public Task<int[]> ChooseMultipleAsync(string message, string[] options, int[] selectedOptions, string title = null, string okButton = "OK", string cancelButton = "Cancel", CancellationToken ct = default(CancellationToken))
         {
             throw new NotImplementedException();
         }
 
-        public Task<InputResponse> InputNumberAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null)
+        public Task<InputResponse> InputNumberAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null, CancellationToken ct = default(CancellationToken))
         {
             throw new NotImplementedException();
         }
