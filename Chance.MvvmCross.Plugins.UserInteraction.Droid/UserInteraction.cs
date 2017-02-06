@@ -19,7 +19,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
         public async Task<bool> ConfirmAsync(string message, string title = "", string okButton = "OK", string cancelButton = "Cancel", CancellationToken ct = default(CancellationToken))
         {
-            return await this._showDialogService.ShowAsync(message, title, null, okButton, cancelButton, null, ct) == ConfirmThreeButtonsResponse.Positive;
+            return await this._showDialogService.ShowAsync(message, title, null, okButton, cancelButton, null, ct).ConfigureAwait(true) == ConfirmThreeButtonsResponse.Positive;
         }
 
         public Task<ConfirmThreeButtonsResponse> ConfirmThreeButtonsAsync(string message, string title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe", CancellationToken ct = default(CancellationToken))
@@ -42,7 +42,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
             return new InputResponse
             {
-                Ok = await this._showDialogService.ShowAsync(message, title, input, okButton, cancelButton, null, ct) == ConfirmThreeButtonsResponse.Positive,
+                Ok = await this._showDialogService.ShowAsync(message, title, input, okButton, cancelButton, null, ct).ConfigureAwait(true) == ConfirmThreeButtonsResponse.Positive,
                 Text = input.Text
             };
         }
@@ -58,7 +58,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
             return new InputResponse
             {
-                Ok = await this._showDialogService.ShowAsync(message, title, input, okButton, cancelButton,  null, ct) == ConfirmThreeButtonsResponse.Positive,
+                Ok = await this._showDialogService.ShowAsync(message, title, input, okButton, cancelButton,  null, ct).ConfigureAwait(true) == ConfirmThreeButtonsResponse.Positive,
                 Text = input.Text
             };
         }
@@ -104,7 +104,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
             scrollView.AddView(radioGroup);
 
-            return await this._showDialogService.ShowAsync(message, title, scrollView, okButton, cancelButton, null, ct) == ConfirmThreeButtonsResponse.Positive
+            return await this._showDialogService.ShowAsync(message, title, scrollView, okButton, cancelButton, null, ct).ConfigureAwait(true) == ConfirmThreeButtonsResponse.Positive
                 ? (radioGroup.CheckedRadioButtonId > 0 ? radioGroup.CheckedRadioButtonId - 1 : (int?) null)
                 : null;
         }
@@ -175,7 +175,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
             scrollView.AddView(linearLayout);
 
-            return await this._showDialogService.ShowAsync(message, title, scrollView, okButton, cancelButton, null, ct) == ConfirmThreeButtonsResponse.Positive
+            return await this._showDialogService.ShowAsync(message, title, scrollView, okButton, cancelButton, null, ct).ConfigureAwait(true) == ConfirmThreeButtonsResponse.Positive
                 ? options.Select((x, i) => checkBoxes[i].Checked ? i : -1).Where(x => x != -1).ToArray() 
                 : new int[0];
         }
