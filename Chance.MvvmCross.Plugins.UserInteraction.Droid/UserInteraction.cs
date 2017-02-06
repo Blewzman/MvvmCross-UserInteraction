@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading;
 using Android.Widget;
 using System.Threading.Tasks;
+using Android.Content;
 using Android.Graphics;
 using Android.Util;
 using Android.Views;
@@ -34,7 +35,9 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
         public async Task<InputResponse> InputTextAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null, CancellationToken ct = default(CancellationToken))
         {
-            var input = new EditText(this._showDialogService.CurrentActivity)
+            var context = this.GetContextOrThrow();
+
+            var input = new EditText(context)
             {
                 Hint = placeholder,
                 Text = initialText
@@ -49,7 +52,9 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
         public async Task<InputResponse> InputNumberAsync(string message, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", string initialText = null, CancellationToken ct = default(CancellationToken))
         {
-            var input = new EditText(this._showDialogService.CurrentActivity)
+            var context = this.GetContextOrThrow();
+
+            var input = new EditText(context)
             {
                 Hint = placeholder,
                 Text = initialText,
@@ -65,10 +70,12 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
         public async Task<int?> ChooseSingleAsync(string message, string[] options, int? chosenItem = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", CancellationToken ct = default(CancellationToken))
         {
+            var context = this.GetContextOrThrow();
+
             var radioButtons = options
                 .Select((option, i) =>
                 {
-                    var checkBox = new RadioButton(this._showDialogService.CurrentActivity)
+                    var checkBox = new RadioButton(context)
                     {
                         LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent)
                         {
@@ -86,7 +93,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
                 })
                 .ToArray();
 
-            var radioGroup = new RadioGroup(this._showDialogService.CurrentActivity)
+            var radioGroup = new RadioGroup(context)
             {
                 LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent),
                 Orientation = Orientation.Vertical
@@ -97,7 +104,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
                 radioGroup.AddView(optionLayout);
             }
 
-            var scrollView = new ScrollView(this._showDialogService.CurrentActivity)
+            var scrollView = new ScrollView(context)
             {
                 LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent),
             };
@@ -112,11 +119,12 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
         public async Task<int[]> ChooseMultipleAsync(string message, string[] options, int[] selectedOptions, string title = null, string okButton = "OK", string cancelButton = "Cancel", CancellationToken ct = default(CancellationToken))
         {
             CheckBox[] checkBoxes = null;
+            var context = this.GetContextOrThrow();
 
             checkBoxes = options
                 .Select(x =>
                 {
-                    var checkBox = new CheckBox(this._showDialogService.CurrentActivity)
+                    var checkBox = new CheckBox(context)
                     {
                         LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent)
                         {
@@ -135,19 +143,19 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
             var optionLayouts = options
                 .Select((option, i) =>
                 {
-                    var optionLayout = new LinearLayout(this._showDialogService.CurrentActivity)
+                    var optionLayout = new LinearLayout(context)
                     {
                         LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent),
                         Orientation = Orientation.Horizontal
                     };
 
                     optionLayout.AddView(checkBoxes[i]);
-                    optionLayout.AddView(new TextView(this._showDialogService.CurrentActivity)
+                    optionLayout.AddView(new TextView(context)
                     {
                         LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent)
                         {
                             Gravity = GravityFlags.CenterVertical,
-                            LeftMargin = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, this._showDialogService.CurrentActivity.Resources.DisplayMetrics)
+                            LeftMargin = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, context.Resources.DisplayMetrics)
                         },
 
                         Text = option
@@ -157,7 +165,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
                 })
                 .ToArray();
 
-            var linearLayout = new LinearLayout(this._showDialogService.CurrentActivity)
+            var linearLayout = new LinearLayout(context)
             {
                 LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent),
                 Orientation = Orientation.Vertical
@@ -168,7 +176,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
                 linearLayout.AddView(optionLayout);
             }
 
-            var scrollView = new ScrollView(this._showDialogService.CurrentActivity)
+            var scrollView = new ScrollView(context)
             {
                 LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent),
             };
@@ -178,6 +186,15 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
             return await this._showDialogService.ShowAsync(message, title, scrollView, okButton, cancelButton, null, ct).ConfigureAwait(true) == ConfirmThreeButtonsResponse.Positive
                 ? options.Select((x, i) => checkBoxes[i].Checked ? i : -1).Where(x => x != -1).ToArray() 
                 : new int[0];
+        }
+
+        private Context GetContextOrThrow()
+        {
+            var ret = this._showDialogService.CurrentActivity;
+            if (ret == null)
+                throw new TaskCanceledException();
+
+            return ret;
         }
     }
 }
