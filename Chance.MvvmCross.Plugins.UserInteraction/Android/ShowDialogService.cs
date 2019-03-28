@@ -24,9 +24,9 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
                 else
                 {
                     var html = Build.VERSION.SdkInt >= BuildVersionCodes.N
-                        ? Html.FromHtml(message, FromHtmlOptions.ModeLegacy)
+                        ? Html.FromHtml(message ?? string.Empty, FromHtmlOptions.ModeLegacy)
                         #pragma warning disable CS0618 // Type or member is obsolete
-                        : Html.FromHtml(message);
+                        : Html.FromHtml(message ?? string.Empty);
                         #pragma warning restore CS0618 // Type or member is obsolete
 
                     var builder = this.CreateBuilder()
