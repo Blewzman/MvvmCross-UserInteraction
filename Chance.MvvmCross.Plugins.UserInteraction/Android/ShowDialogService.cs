@@ -1,7 +1,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
+using Android.OS;
+using Android.Text;
+using Android.Text.Method;
 using Android.Views;
+using Android.Widget;
 using MvvmCross;
 using MvvmCross.Platforms.Android;
 
@@ -19,8 +23,14 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
                     tcs.TrySetCanceled();
                 else
                 {
+                    var html = Build.VERSION.SdkInt >= BuildVersionCodes.N
+                        ? Html.FromHtml(message, FromHtmlOptions.ModeLegacy)
+                        #pragma warning disable CS0618 // Type or member is obsolete
+                        : Html.FromHtml(message);
+                        #pragma warning restore CS0618 // Type or member is obsolete
+
                     var builder = this.CreateBuilder()
-                        .SetMessage(message)
+                        .SetMessage(html)
                         .SetTitle(title);
 
                     if (view != null)
@@ -51,6 +61,9 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
                     }
 
                     dialog.Show();
+
+                    if (dialog.FindViewById(Android.Resource.Id.Message) is TextView messageTextView)
+                        messageTextView.MovementMethod = LinkMovementMethod.Instance;
                 }
             }, null);
 
