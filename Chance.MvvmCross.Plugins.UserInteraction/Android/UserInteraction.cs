@@ -98,7 +98,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
             var radioGroup = new RadioGroup(context)
             {
-                LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent),
+                LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent),
                 Orientation = Orientation.Vertical
             };
 
@@ -109,7 +109,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
             var scrollView = new ScrollView(context)
             {
-                LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent),
+                LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent),
             };
 
             scrollView.AddView(radioGroup);
@@ -148,14 +148,14 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
                 {
                     var optionLayout = new LinearLayout(context)
                     {
-                        LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent),
+                        LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent),
                         Orientation = Orientation.Horizontal
                     };
 
                     optionLayout.AddView(checkBoxes[i]);
                     optionLayout.AddView(new TextView(context)
                     {
-                        LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent)
+                        LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent)
                         {
                             Gravity = GravityFlags.CenterVertical,
                             LeftMargin = (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, 8, context.Resources.DisplayMetrics)
@@ -170,7 +170,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
             var linearLayout = new LinearLayout(context)
             {
-                LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent),
+                LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent),
                 Orientation = Orientation.Vertical
             };
 
@@ -181,7 +181,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
             var scrollView = new ScrollView(context)
             {
-                LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent),
+                LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent),
             };
 
             scrollView.AddView(linearLayout);
