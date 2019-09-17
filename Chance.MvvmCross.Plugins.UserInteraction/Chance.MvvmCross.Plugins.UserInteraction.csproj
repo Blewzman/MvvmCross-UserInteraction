@@ -6,14 +6,21 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>3.0.1</Version>
+    <DesignTimeBuild>false</DesignTimeBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="*.cs" Exclude="bin\**\*.*;obj\**\*.*;bin;obj" />
+    <Compile Include="*.cs" Exclude="bin\**\*.*;bin;obj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid81'">
-    <Compile Include="*Android\**\*.cs" Exclude="bin\**\*.*;obj\**\*.*;bin;obj" />
+    <Compile Include="*Android\**\*.cs" Exclude="bin\**\*.*;bin;obj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="obj\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="obj\**" />
   </ItemGroup>
 
   <ItemGroup>
