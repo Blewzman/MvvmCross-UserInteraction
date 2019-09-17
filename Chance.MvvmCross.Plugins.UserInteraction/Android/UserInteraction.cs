@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using Android.Widget;
 using System.Threading.Tasks;
@@ -6,16 +6,19 @@ using Android.Content;
 using Android.Graphics;
 using Android.Util;
 using Android.Views;
+using MvvmCross.Platforms.Android;
 
 namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 {
     public class UserInteraction : IUserInteraction
     {
         private readonly IShowDialogService _showDialogService;
+        private readonly IMvxAndroidCurrentTopActivity _topActivityService;
 
-        public UserInteraction(IShowDialogService showDialogService)
+        public UserInteraction(IShowDialogService showDialogService, IMvxAndroidCurrentTopActivity topActivityService)
         {
-            this._showDialogService = showDialogService;
+            _showDialogService = showDialogService;
+            _topActivityService = topActivityService;
         }
 
         public async Task<bool> ConfirmAsync(string message, string title = "", string okButton = "OK", string cancelButton = "Cancel", CancellationToken ct = default(CancellationToken))
@@ -190,7 +193,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
         private Context GetContextOrThrow()
         {
-            var ret = this._showDialogService.CurrentActivity;
+            var ret = _topActivityService.Activity;
             if (ret == null)
                 throw new TaskCanceledException();
 

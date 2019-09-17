@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.OS;
@@ -6,20 +6,26 @@ using Android.Text;
 using Android.Text.Method;
 using Android.Views;
 using Android.Widget;
-using MvvmCross;
 using MvvmCross.Platforms.Android;
 
 namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 {
     public class ShowDialogService : IShowDialogService
     {
+        private readonly IMvxAndroidCurrentTopActivity _topActivityService;
+
+        public ShowDialogService(IMvxAndroidCurrentTopActivity topActivityService)
+        {
+            _topActivityService = topActivityService;
+        }
+
         public Task<ConfirmThreeButtonsResponse> ShowAsync(string message, string title = null, View view = null, string positive = null, string negative = null, string neutral = null, CancellationToken ct = default(CancellationToken))
         {
             var tcs = new TaskCompletionSource<ConfirmThreeButtonsResponse>();
 
             Application.SynchronizationContext.Post(ignored =>
             {
-                if (CurrentActivity == null)
+                if (_topActivityService.Activity == null)
                     tcs.TrySetCanceled();
                 else
                 {
@@ -72,9 +78,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
 
         protected virtual AlertDialog.Builder CreateBuilder()
         {
-            return new AlertDialog.Builder(this.CurrentActivity);
+            return new AlertDialog.Builder(_topActivityService.Activity);
         }
-
-        public Activity CurrentActivity => Mvx.Resolve<IMvxAndroidCurrentTopActivity>().Activity;
     }
 }
