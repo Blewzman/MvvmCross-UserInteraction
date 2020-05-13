@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,7 +34,7 @@ namespace Chance.MvvmCross.Plugins.UserInteraction
                 task.ContinueWith((closureTask, closureAction) => ((Action<bool>)closureAction)(closureTask.Result), answer, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
-        public static void Alert(this IUserInteraction userInteraction, string message, Action done = null, string title = "", string okButton = "OK")
+        public static void Alert(this IUserInteraction userInteraction, string message, string title = "", string okButton = "OK", Action done = null)
         {
             var task = userInteraction.AlertAsync(
                 message,
