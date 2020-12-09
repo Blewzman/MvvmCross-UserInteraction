@@ -1,7 +1,7 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>MonoAndroid90;netstandard20</TargetFrameworks>
+    <TargetFrameworks>MonoAndroid10.0;netstandard20</TargetFrameworks>
     <AssemblyName>Chance.MvvmCross.Plugins.UserInteraction</AssemblyName>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -13,7 +13,7 @@
     <Compile Include="*.cs" Exclude="bin\**\*.*;bin;obj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid90'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid10.0'">
     <Compile Include="*Android\**\*.cs" Exclude="bin\**\*.*;bin;obj" />
   </ItemGroup>
 
