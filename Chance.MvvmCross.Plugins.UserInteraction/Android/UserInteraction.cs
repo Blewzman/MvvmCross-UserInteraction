@@ -1,4 +1,5 @@
-﻿using System.Linq;
+#if MONOANDROID10_0
+using System.Linq;
 using System.Threading;
 using Android.Widget;
 using System.Threading.Tasks;
@@ -201,4 +202,4 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
         }
     }
 }
-
+#endif

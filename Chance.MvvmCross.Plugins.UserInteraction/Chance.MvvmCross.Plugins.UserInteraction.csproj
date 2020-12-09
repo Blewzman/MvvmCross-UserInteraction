@@ -2,26 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>MonoAndroid10.0;netstandard2.1</TargetFrameworks>
-    <AssemblyName>Chance.MvvmCross.Plugins.UserInteraction</AssemblyName>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>3.0.1</Version>
-    <DesignTimeBuild>false</DesignTimeBuild>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Include="*.cs" Exclude="bin\**\*.*;bin;obj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid10.0'">
-    <Compile Include="*Android\**\*.cs" Exclude="bin\**\*.*;bin;obj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="obj\**" />
-    <EmbeddedResource Remove="obj\**" />
-    <None Remove="obj\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MvvmCross" Version="6.4.2" />

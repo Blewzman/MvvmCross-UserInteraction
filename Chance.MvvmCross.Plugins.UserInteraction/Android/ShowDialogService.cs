@@ -1,4 +1,5 @@
-﻿using System.Threading;
+#if MONOANDROID10_0
+using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.OS;
@@ -31,9 +32,9 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
                 {
                     var html = Build.VERSION.SdkInt >= BuildVersionCodes.N
                         ? Html.FromHtml(message ?? string.Empty, FromHtmlOptions.ModeLegacy)
-                        #pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
                         : Html.FromHtml(message ?? string.Empty);
-                        #pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning restore CS0618 // Type or member is obsolete
 
                     var builder = this.CreateBuilder()
                         .SetMessage(html)
@@ -82,3 +83,4 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
         }
     }
 }
+#endif

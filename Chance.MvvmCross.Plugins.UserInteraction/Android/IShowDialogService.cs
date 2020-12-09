@@ -1,4 +1,5 @@
-﻿using System.Threading;
+#if MONOANDROID10_0
+using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Views;
@@ -10,3 +11,4 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
         Task<ConfirmThreeButtonsResponse> ShowAsync(string message, string title = null, View view = null, string positive = null, string negative = null, string neutral = null, CancellationToken ct = default(CancellationToken));
     }
 }
+#endif

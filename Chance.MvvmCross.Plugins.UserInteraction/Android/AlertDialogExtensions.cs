@@ -1,3 +1,4 @@
+#if MONOANDROID10_0
 using System;
 using Android.App;
 using Android.Content;
@@ -38,3 +39,4 @@ namespace Chance.MvvmCross.Plugins.UserInteraction.Droid
         }
     }
 }
+#endif
