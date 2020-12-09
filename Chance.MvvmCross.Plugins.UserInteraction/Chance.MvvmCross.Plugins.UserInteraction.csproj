@@ -1,7 +1,7 @@
 <Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>MonoAndroid10.0;netstandard20</TargetFrameworks>
+    <TargetFrameworks>MonoAndroid10.0;netstandard2.1</TargetFrameworks>
     <AssemblyName>Chance.MvvmCross.Plugins.UserInteraction</AssemblyName>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
